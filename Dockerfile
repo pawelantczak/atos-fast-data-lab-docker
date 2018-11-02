@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 
 RUN apt-get update
-RUN apt-get install -y software-properties-common apt-transport-https wget sudo apt-utils openjdk-8-jre
+RUN apt-get install -y software-properties-common apt-transport-https wget sudo apt-utils openjdk-8-jre curl
 RUN adduser --disabled-password --gecos '' docker
 RUN adduser docker sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
@@ -25,12 +25,11 @@ RUN mkdir /home/docker/scdf
 RUN wget http://repo.spring.io/libs-release/org/springframework/cloud/metrics-collector-kafka/2.0.0.RELEASE/metrics-collector-kafka-2.0.0.RELEASE.jar -P /home/docker/scdf
 RUN wget https://repo.spring.io/release/org/springframework/cloud/spring-cloud-dataflow-server-local/1.7.0.RELEASE/spring-cloud-dataflow-server-local-1.7.0.RELEASE.jar -P /home/docker/scdf
 RUN wget https://repo.spring.io/release/org/springframework/cloud/spring-cloud-dataflow-shell/1.7.0.RELEASE/spring-cloud-dataflow-shell-1.7.0.RELEASE.jar -P /home/docker/scdf
-
-RUN cd /home/docker/kafka && tar zxvf kafka_2.11-2.0.0.tgz
+COPY scdf-import.cmd /home/docker/scdf/scdf-import.cmd
 
 COPY startup.sh /home/docker/startup.sh
 
 ENTRYPOINT /home/docker/startup.sh
 
-EXPOSE 8080 80 5601
+EXPOSE 8080 80 5601 9494 9393
 
