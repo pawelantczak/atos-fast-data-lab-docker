@@ -1,6 +1,6 @@
 before_script:
    - docker info
 
- build_image:
+build_image:
    script:
      - docker build -t fast-data-lab .
