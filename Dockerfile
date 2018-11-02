@@ -13,7 +13,7 @@ USER docker
 RUN wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 RUN echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
 RUN sudo apt-get update
-RUN sudo apt-get install elasticsearch  kibana
+RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install elasticsearch  kibana
 RUN sudo /bin/systemctl daemon-reload
 RUN sudo /bin/systemctl enable elasticsearch.service
 RUN sudo /bin/systemctl enable kibana.service
