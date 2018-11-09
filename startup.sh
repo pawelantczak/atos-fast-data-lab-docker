@@ -12,15 +12,15 @@ export spring_cloud_dataflow_metrics_collector_password=p
 export KAFKA_HEAP_OPTS="-Xmx512M -Xms512M"
 
 echo "Starting ELK"
-sudo service elasticsearch start
-sudo service kibana start
+sudo -E service elasticsearch start
+sudo -E service kibana start
 
 echo "Starting Kafka"
 /home/atos/kafka/kafka_2.11-2.0.0/bin/zookeeper-server-start.sh -daemon /home/atos/kafka/kafka_2.11-2.0.0/config/zookeeper.properties
 /home/atos/kafka/kafka_2.11-2.0.0/bin/kafka-server-start.sh -daemon /home/atos/kafka/kafka_2.11-2.0.0/config/server.properties
 
 echo "Starting Spring CDF"
-nohup java -Xmx512m -jar /home/atos/scdf/spring-cloud-dataflow-server-local-1.7.0.RELEASE.jar --logging.file=/home/atos/scdf/scdf.log --spring.cloud.dataflow.applicationProperties.stream.spring.cloud.stream.bindings.applicationMetrics.destination=metrics --spring.cloud.dataflow.applicationProperties.stream.spring.metrics.export.includes=integration.channel.input**,integration.channel.output** --spring.cloud.dataflow.applicationProperties.deployer.*.memory=64m >/dev/null 2>&1 &
+nohup java -Xmx512m -jar /home/atos/scdf/spring-cloud-dataflow-server-local-1.7.0.RELEASE.jar --logging.file=/home/atos/scdf/scdf.log --spring.cloud.dataflow.applicationProperties.stream.spring.cloud.stream.bindings.applicationMetrics.destination=metrics --spring.cloud.dataflow.applicationProperties.stream.spring.metrics.export.includes=integration.channel.input**,integration.channel.output** --spring.cloud.deployer.local.javaOpts="-Xmx128m -Xms64m" >/dev/null 2>&1 &
 nohup java -Xmx64m -jar /home/atos/scdf/metrics-collector-kafka-2.0.0.RELEASE.jar --logging.file=/home/atos/scdf/collector.log --server.port=9494 >/dev/null 2>&1 &
 until $(curl --output /dev/null --silent --fail http://localhost:9393); do printf '.'; sleep 1; done
 echo -e "\nSetting-up Spring CDF"

@@ -1,4 +1,5 @@
 app import --uri http://bit.ly/Darwin-SR2-stream-applications-kafka-maven
 stream create --name 'time-log' --definition 'time | log'
 stream deploy --name time-log
-
+stream create --name 'coinpaprika-kibana' --definition 'time --time-unit=MINUTES | coinpaprika: httpclient --http-method=GET --headers-expression={\'User-Agent\':\'curl/7.58.0\'} --url=https://api.coinpaprika.com/v1/ticker --expected-response-type=java.lang.String | transform: groovy-transform --spring.cloud.stream.kafka.bindings.input.consumer.configuration.value.deserializer=org.apache.kafka.common.serialization.StringDeserializer --script=file:///home/atos/scdf/jsonArrayToObject.groovy | splitter --expression=payload.split(T(System).lineSeparator()) --spring.cloud.stream.kafka.bindings.input.consumer.configuration.value.deserializer=org.apache.kafka.common.serialization.StringDeserializer --markers-json=false --apply-sequence=false | kibana: httpclient --http-method=POST --headers-expression={\'Content-Type\':\'application/json\'} --url=http://localhost:9200/cryptocurrency/event/ --expected-response-type=java.lang.String | log'
+stream deploy --name coinpaprika-kibana

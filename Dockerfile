@@ -16,6 +16,7 @@ RUN echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo 
 RUN sudo apt-get update
 RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install elasticsearch kibana
 RUN sudo sed -i 's/#server.host: "localhost"/server.host: "0.0.0.0"/g' /etc/kibana/kibana.yml
+RUN sudo bash -c 'echo ES_JAVA_OPTS=\"-Xmx1g -Xms512m\" >> /etc/default/elasticsearch'
 
 #Install Kafka
 RUN mkdir /home/atos/kafka
@@ -28,6 +29,7 @@ RUN wget http://repo.spring.io/libs-release/org/springframework/cloud/metrics-co
 RUN wget https://repo.spring.io/release/org/springframework/cloud/spring-cloud-dataflow-server-local/1.7.0.RELEASE/spring-cloud-dataflow-server-local-1.7.0.RELEASE.jar -P /home/atos/scdf
 RUN wget https://repo.spring.io/release/org/springframework/cloud/spring-cloud-dataflow-shell/1.7.0.RELEASE/spring-cloud-dataflow-shell-1.7.0.RELEASE.jar -P /home/atos/scdf
 COPY scdf-setup.cmd /home/atos/scdf/scdf-setup.cmd
+COPY jsonArrayToObject.groovy /home/atos/scdf/jsonArrayToObject.groovy
 
 COPY startup.sh /home/atos/startup.sh
 
