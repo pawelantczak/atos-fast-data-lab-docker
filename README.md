@@ -11,3 +11,8 @@
 - Kibana - ```5601```
 - Kafka - ```not exposed```
 - Elasticsearch - ```not exposed```
+
+### Run via docker run:
+```bash
+docker run -i -t  -p 5601:5601 -p 9494:9494 -p 9393:9393 \ 
+	--ulimit nofile=65536:65536 atos-fast-data-lab```

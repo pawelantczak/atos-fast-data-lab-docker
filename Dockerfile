@@ -35,5 +35,5 @@ COPY startup.sh /home/atos/startup.sh
 
 ENTRYPOINT /home/atos/startup.sh
 
-EXPOSE 8080 80 5601 9494 9393
+EXPOSE 5601 9494 9393
 
